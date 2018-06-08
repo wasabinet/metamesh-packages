@@ -28,8 +28,8 @@ include $(INCLUDE_DIR)/package.mk
 
 
 define Package/pittmesh-autoconf
-  SECTION:=Utilities
-  CATEGORY:=Utilities
+  SECTION:=metamesh
+  CATEGORY:=Metamesh
   TITLE:=auto-configuration utility used for pittmesh
   DEPENDS:=+olsrd +olsrd-mod-jsoninfo +olsrd-mod-mdns +dropbear +snmpd +uhttpd
   Maintainer:=$(PKG_MAINTAINER)
