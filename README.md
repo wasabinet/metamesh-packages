@@ -10,7 +10,7 @@ Update the feed:
 
   ./scripts/feeds update metamesh
   
-Activate the package:
+Activate the feed's packages:
 
   ./scripts/feeds install -a -p metamesh
   
