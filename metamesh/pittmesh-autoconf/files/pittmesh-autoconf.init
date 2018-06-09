@@ -1,17 +1,23 @@
 #!/bin/sh /etc/rc.common
-# We only run firstconfig on startup, ignore restart
+# We only run firstconfig on boot, ignore the others
+
 START=99
 STOP=10
+
 boot() {
+        logger run /lib/metamesh/MeshFirstConfig.sh
+        #/lib/metamesh/MeshFirstConfig.sh
 	return 0
 }
+
 reload() {
 	return 0
 }
+
 restart() {
 	return 0
 }
+
 start() {
-	logger run /lib/metamesh/MeshFirstConfig.sh
-	#/lib/metamesh/MeshFirstConfig.sh
+        return 0
 }

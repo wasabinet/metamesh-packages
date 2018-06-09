@@ -16,7 +16,7 @@
 # in /etc/config/pittmesh-autoconf.  Upon successful completion, this script will
 # then update /etc/config/pittmesh-autoconf to disable itself and then reboot.
 
-firstconfig_enabled=$(uci get pittmesh-autoconfig.firstconfig.enabled)
+firstconfig_enabled=$(uci get pittmesh-autoconf.@firstconfig[0].enabled)
 [ 1 -eq "$firstconfig_enabled" ] || exit 0
 
 # Update where OpenWRT pulls updates from. - AWAITING NEW RELEASE BEFORE MIRRORING ON OUR SERVER
@@ -42,7 +42,7 @@ uci set uhttpd.main.rfc1918_filter=0; uci commit uhttpd
 /etc/init.d/odhcpd disable
 
 # Set the timeserver to a node host on Mount Oliver who has a stratum 0 time server and set logs to go to Meta Mesh.
-uci set system.cfg02e48a.timezone=EST5EDT,M3.2.0,M11.1.0
+uci set system.@system[0].timezone=EST5EDT,M3.2.0,M11.1.0
 uci set system.@system[0].zonename="America/New York"
 uci set system.ntp=timeserver
 uci set system.ntp.enabled=1
@@ -62,7 +62,7 @@ ipETHERMESH=100.$(expr $(echo $ipMESH|cut -d "." -f 4) % 64 + 64).$(echo $ipMESH
 # Set up interfaces and use the mm-mac2ipv4 script's conversions as IP addresses.
 uci set network.mesh=interface
 uci set network.mesh.proto=static
-uci set network.mesh.ipaddr=`echo $ipMESH`
+uci set network.mesh.ipaddr=$ipMESH
 uci set network.mesh.netmask=255.192.0.0
 
 #Set up ethermesh interface
@@ -75,7 +75,7 @@ uci set network.ethermesh.ipaddr=$ipETHERMESH
 # Note: because we originally wrote the script for another device, we're calling the wlan variable. on ar150's the wlan and lan are bridged.
 uci set network.lan=interface
 uci set network.lan.proto=static
-uci set network.lan.ipaddr=`echo $ipLAN`
+uci set network.lan.ipaddr=$ipLAN
 uci set network.lan.netmask=255.255.255.0
 uci set network.lan._orig_ifname=eth1
 uci set network.lan._orig_bridge=true
@@ -108,7 +108,7 @@ uci commit wireless
 
 # Set HNA announcements for the LAN and Internet
 uci add olsrd Hna4
-uci set olsrd.@Hna4[0].netaddr=`echo $ipHNA`
+uci set olsrd.@Hna4[0].netaddr=$ipHNA
 uci set olsrd.@Hna4[0].netmask=255.255.255.0
 uci add olsrd Hna4
 uci set olsrd.@Hna4[1].netaddr=0.0.0.0
@@ -124,19 +124,19 @@ uci set olsrd.@Interface[1].interface=lan
 uci set olsrd.@Interface[1].Mode=ether
 uci set olsrd.@Interface[1].interface=ethermesh
 uci set olsrd.@olsrd[0].LinkQualityAlgorithm=etx_ffeth
+uci commit olsrd
 
 # Enable olsrd plugins
-echo "config LoadPlugin" >> /etc/config/olsrd
-echo "    option library olsrd_mdns.so.1.0.1" >> /etc/config/olsrd
-pluginNum=$(uci show|grep olsrd.@LoadPlugin|grep olsrd_mdns.so.1.0.1|sed "s|.*\[\([0-9]*\)\].*|\1|")
-uci set olsrd.@LoadPlugin[$pluginNum].ignore=0
-
-echo "config LoadPlugin" >> /etc/config/olsrd
-echo "    option library olsrd_jsoninfo.so.1.1" >> /etc/config/olsrd
-pluginNum=$(uci show|grep olsrd.@LoadPlugin|grep olsrd_jsoninfo.so.1.1|sed "s|.*\[\([0-9]*\)\].*|\1|")
-uci set olsrd.@LoadPlugin[$pluginNum].ignore=0
-
-uci commit olsrd
+if ! [ "$(uci show olsrd|grep olsrd_mdns)" ] ; then
+    uci add olsrd LoadPlugin
+    uci set olsrd.@LoadPlugin[-1].library=olsrd_mdns.so.1.0.1
+    uci commit olsrd
+fi
+if ! [ "$(uci show olsrd|grep olsrd_jsoninfo)" ] ; then
+    uci add olsrd LoadPlugin
+    uci set olsrd.@LoadPlugin[-1].library=olsrd_jsoninfo.so.1.1
+    uci commit olsrd
+fi
 
 # Set iptables rules to allow forwarding between interfaces.
 uci set firewall.@defaults[0].forward=ACCEPT
@@ -192,7 +192,7 @@ uci commit firewall
 
 # We're done, so disable me from running again
 logger "pittmesh-autoconfig completed firstconfig, disabling itself"
-uci set pittmesh-autoconfig.firstconfig.enabled=0
-uci commit pittmesh-autoconfig
+uci set pittmesh-autoconf.@firstconfig[0].enabled=0
+uci commit pittmesh-autoconf
 
 reboot

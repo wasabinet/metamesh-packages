@@ -46,9 +46,9 @@ endef
 
 define Package/pittmesh-autoconf/install
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(CP) ./files/sbin/mm-mac2ipv4.sh $(1)/usr/sbin/
+	$(INSTALL_BIN) ./files/sbin/mm-mac2ipv4.sh $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/lib/metamesh
-	$(INSTALL_DATA) ./files/lib/metamesh/MeshFirstConfig.sh $(1)/lib/metamesh/MeshFirstConfig.sh
+	$(INSTALL_BIN) ./files/lib/metamesh/MeshFirstConfig.sh $(1)/lib/metamesh/MeshFirstConfig.sh
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./files/pittmesh-autoconf.config $(1)/etc/config/pittmesh-autoconf
 	$(INSTALL_DIR) $(1)/etc/init.d
