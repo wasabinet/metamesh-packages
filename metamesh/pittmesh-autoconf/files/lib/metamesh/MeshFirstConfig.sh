@@ -19,6 +19,8 @@
 firstconfig_enabled=$(uci get pittmesh-autoconf.@firstconfig[0].enabled)
 [ 1 -eq "$firstconfig_enabled" ] || exit 0
 
+logger MeshFirstConfig.sh deploying configuration
+
 # Update where OpenWRT pulls updates from. - AWAITING NEW RELEASE BEFORE MIRRORING ON OUR SERVER
 #rm /etc/opkg/distfeeds.conf
 #echo src/gz chaos_calmer_base http://openwrt.metamesh.org/a150/openwrt/ar71xx/clean/1.0/packages/base>> /etc/opkg.conf
@@ -105,8 +107,8 @@ uci set wireless.@wifi-iface[0].ssid=PittMesh-NEWNODE-2401
 uci set wireless.@wifi-iface[0].disabled=0
 uci commit wireless
 
-
 # Set HNA announcements for the LAN and Internet
+# TODO: Problems will running this section repeatedly on existing olsrd config
 uci add olsrd Hna4
 uci set olsrd.@Hna4[0].netaddr=$ipHNA
 uci set olsrd.@Hna4[0].netmask=255.255.255.0
@@ -195,4 +197,5 @@ logger "pittmesh-autoconfig completed firstconfig, disabling itself"
 uci set pittmesh-autoconf.@firstconfig[0].enabled=0
 uci commit pittmesh-autoconf
 
+logger MeshFirstConfig.sh rebooting
 reboot
