@@ -9,8 +9,11 @@
 # * Adam Longwill
 # * Evie Vanderveer
 #
+# TODO: This is script isn't idempotent.  Running on existing config messes with
+# olsrd and firewall sections.
 # TODO: Port this script to use config_get / config_get functions in
 # /lib/functions.sh per https://openwrt.org/docs/guide-developer/config-scripting
+# TODO: Update PITTMESH references to METAMESH?
 #
 # This script is launched by our /etc/init.d script, and it runs only if enabled
 # in /etc/config/pittmesh-autoconf.  Upon successful completion, this script will
