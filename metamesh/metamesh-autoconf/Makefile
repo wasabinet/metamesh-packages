@@ -9,12 +9,12 @@ PKG_RELEASE:=1
 PKG_LICENSE:=MIT
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
-# Custom vars
-metamesh_platform:=glinet-ar150
-metamesh_type:=generic
-metamesh_platform:=ar150
-metamesh_type:=DHCP-AP-Gateway
-script_name:=MeshFirstConfig.sh
+# Custom vars, not used
+#metamesh_platform:=glinet-ar150
+#metamesh_type:=generic
+#metamesh_platform:=ar150
+#metamesh_type:=DHCP-AP-Gateway
+#script_name:=MeshFirstConfig.sh
 
 include $(INCLUDE_DIR)/package.mk
 
