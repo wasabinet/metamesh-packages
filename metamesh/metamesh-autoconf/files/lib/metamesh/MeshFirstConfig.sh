@@ -139,11 +139,13 @@ uci commit olsrd
 if ! [ "$(uci show olsrd|grep olsrd_mdns)" ] ; then
     uci add olsrd LoadPlugin
     uci set olsrd.@LoadPlugin[-1].library=olsrd_mdns.so.1.0.1
+    uci set olsrd.@LoadPlugin[-1].ignore=0
     uci commit olsrd
 fi
 if ! [ "$(uci show olsrd|grep olsrd_jsoninfo)" ] ; then
     uci add olsrd LoadPlugin
     uci set olsrd.@LoadPlugin[-1].library=olsrd_jsoninfo.so.1.1
+    uci set olsrd.@LoadPlugin[-1].ignore=0
     uci commit olsrd
 fi
 
