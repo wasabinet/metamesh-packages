@@ -16,10 +16,10 @@
 # TODO: Update PITTMESH references to METAMESH?
 #
 # This script is launched by our /etc/init.d script, and it runs only if enabled
-# in /etc/config/pittmesh-autoconf.  Upon successful completion, this script will
-# then update /etc/config/pittmesh-autoconf to disable itself and then reboot.
+# in /etc/config/metamesh-autoconf.  Upon successful completion, this script will
+# then update /etc/config/metamesh-autoconf to disable itself and then reboot.
 
-firstconfig_enabled=$(uci get pittmesh-autoconf.@firstconfig[0].enabled)
+firstconfig_enabled=$(uci get metamesh-autoconf.@firstconfig[0].enabled)
 [ 1 -eq "$firstconfig_enabled" ] || exit 0
 
 logger MeshFirstConfig.sh deploying configuration
@@ -196,9 +196,9 @@ uci set firewall.@rule[11].name=Block-LAN-Access-2
 uci commit firewall
 
 # We're done, so disable me from running again
-logger "pittmesh-autoconfig completed firstconfig, disabling itself"
-uci set pittmesh-autoconf.@firstconfig[0].enabled=0
-uci commit pittmesh-autoconf
+logger "metamesh-autoconfig completed firstconfig, disabling itself"
+uci set metamesh-autoconf.@firstconfig[0].enabled=0
+uci commit metamesh-autoconf
 
 logger MeshFirstConfig.sh rebooting
 reboot
