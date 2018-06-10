@@ -56,7 +56,9 @@ uci set system.ntp.enable_server=1
 uci commit system
 
 # Forward all DNS requests to a public DNS server.
-uci set dhcp.@dnsmasq[0].server=8.8.8.8
+uci delete dhcp.@dnsmasq[0].server
+uci add_list dhcp.@dnsmasq[0].server='8.8.8.8'
+uci add_list dhcp.@dnsmasq[0].server='8.8.4.4'
 uci commit dhcp
 
 ipMESH=$(mm-mac2ipv4.sh $(cat /sys/class/net/eth0/address));
@@ -69,12 +71,14 @@ uci set network.mesh=interface
 uci set network.mesh.proto=static
 uci set network.mesh.ipaddr=$ipMESH
 uci set network.mesh.netmask=255.192.0.0
+uci set network.mesh.dns='8.8.8.8 8.8.4.4'
 
 #Set up ethermesh interface
 uci set network.ethermesh=interface
 uci set network.ethermesh.proto=static
 uci set network.ethermesh.ifname=eth0
 uci set network.ethermesh.netmask=255.192.0.0
+uci set network.ethermesh.dns='8.8.8.8 8.8.4.4'
 uci set network.ethermesh.ipaddr=$ipETHERMESH
 
 # Note: because we originally wrote the script for another device, we're calling the wlan variable. on ar150's the wlan and lan are bridged.
