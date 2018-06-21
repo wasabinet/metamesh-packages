@@ -13,7 +13,8 @@
 # olsrd and firewall sections.
 # TODO: Port this script to use config_get / config_get functions in
 # /lib/functions.sh per https://openwrt.org/docs/guide-developer/config-scripting
-# TODO: Update PITTMESH references to METAMESH?
+#
+# Changed PITTMESH references to NWM.
 #
 # This script is launched by our /etc/init.d script, and it runs only if enabled
 # in /etc/config/metamesh-autoconf.  Upon successful completion, this script will
@@ -99,18 +100,18 @@ uci set dhcp.lan.leasetime=1h
 uci set dhcp.lan.force=1
 uci commit dhcp
 
-# Set up the WiFi. Please change the SSID to PittMesh-youraddress-2401 for the first device, PittMesh-youraddress-2402 for the second device and so on. Max TX rate for the ar150 is 18dBm.
+# Set up the WiFi. Please change the SSID to NWM-youraddress-2401 for the first device, NWM-youraddress-2402 for the second device and so on. Max TX rate for the ar150 is 18dBm.
 uci delete wireless.radio0.disabled
 uci set wireless.radio0.txpower=18
 uci set wireless.radio0.country=US
 uci add wireless wifi-iface
 uci set wireless.@wifi-iface[1].device=radio0
 uci set wireless.@wifi-iface[1].encryption=none
-uci set wireless.@wifi-iface[1].ssid=PittMesh-Backhaul
+uci set wireless.@wifi-iface[1].ssid=NWM-Backhaul
 uci set wireless.@wifi-iface[1].mode=adhoc
 uci set wireless.@wifi-iface[1].network=mesh
 uci set wireless.@wifi-iface[0].network='lan'
-uci set wireless.@wifi-iface[0].ssid=PittMesh-NEWNODE-2401
+uci set wireless.@wifi-iface[0].ssid=NWM-NEWNODE-2401
 uci set wireless.@wifi-iface[0].disabled=0
 uci commit wireless
 
@@ -176,7 +177,7 @@ uci set firewall.@forwarding[5].dest=mesh
 uci set firewall.@forwarding[5].src=wan
 uci commit firewall
 
-# Set custom firewall rules to disallow access to certain IP addresses typically used for private home networks. If you want to share a server on your home network, run OLSR on it and mesh it over ethernet with a 100. address OR connect it directly to a PittMesh router's LAN port and give it a static address between 10.x.x.2 and 9 (.254 is also available by default)
+# Set custom firewall rules to disallow access to certain IP addresses typically used for private home networks. If you want to share a server on your home network, run OLSR on it and mesh it over ethernet with a 100. address OR connect it directly to a NWM router's LAN port and give it a static address between 10.x.x.2 and 9 (.254 is also available by default)
 uci add firewall rule
 uci set firewall.@rule[9].dest=wan
 uci set firewall.@rule[9].proto=all
