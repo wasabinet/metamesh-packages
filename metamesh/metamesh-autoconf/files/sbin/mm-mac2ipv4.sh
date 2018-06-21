@@ -87,7 +87,8 @@ ip2=$(printf "%d" "0x$mac4")
 ip3=$(printf "%d" "0x$mac5")
 ip4=$(printf "%d" "0x$mac6")
 
-ip2=$(expr $ip2 % 32 + 96)
-ip4=$(expr $ip4 - $(expr $ip4 % 64 - $ip4 % 32))
+# these are redundant (and wrong)
+#ip2=$(expr $ip2 % 32 + 96)
+#ip4=$(expr $ip4 - $(expr $ip4 % 64 - $ip4 % 32))
 
 echo "$ip1.$ip2.$ip3.$ip4"
