@@ -35,6 +35,9 @@ logger MeshFirstConfig.sh deploying configuration
 #echo src/gz chaos_calmer_telephony http://openwrt.metamesh.org/a150/openwrt/ar71xx/clean/1.0/packages/telephony>> /etc/opkg.conf
 #echo src/gz pittmesh http://openwrt.metamesh.org/pittmesh>> /etc/opkg.conf
 
+# Get role
+firstconfig_role=$(uci get metamesh-autoconf.@firstconfig[0].role)
+
 # Set Hostname
 uci set system.@system[0].hostname=ap150-STRING-2401
 
@@ -120,9 +123,14 @@ uci commit wireless
 uci add olsrd Hna4
 uci set olsrd.@Hna4[0].netaddr=$ipHNA
 uci set olsrd.@Hna4[0].netmask=255.255.255.0
-uci add olsrd Hna4
-uci set olsrd.@Hna4[1].netaddr=0.0.0.0
-uci set olsrd.@Hna4[1].netmask=0.0.0.0
+
+# Only add HNA 0.0.0.0 to gateways
+if [ "$firstconfig_role" = 'gateway' ] ; then
+    uci add olsrd Hna4
+    uci set olsrd.@Hna4[1].netaddr=0.0.0.0
+    uci set olsrd.@Hna4[1].netmask=0.0.0.0
+fi
+
 uci set olsrd.@Interface[0].ignore=0
 uci set olsrd.@Interface[0].Mode=mesh
 uci set olsrd.@Interface[0].interface='mesh'
